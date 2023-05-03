@@ -1,114 +1,81 @@
 <template>
-  <v-data-table
-  :headers="headers"
-  :items="filteredPacientes"
-  :search="search"
-  :loading="loading"
-  :pagination.sync="pagination"
-  :items-per-page="10"
-  :footer-props="{
-    itemsPerPageOptions: [10, 20, 50, { text: 'Todos', value: -1 }],
-    showCurrentPage: true,
-    showFirstLastPage: true,
-    align: 'center',
-  }"
-  hide-default-footer
-  class="elevation-1"
->
-    <template v-slot:top>
-      <v-toolbar flat color="primary">
-        <v-toolbar-title>Identificación del paciente</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-text-field
+  <v-card>
+    <v-card-title>
+      Pacientes
+      <v-spacer></v-spacer>
+      <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
-          label="Buscar"
+          label="Search"
           single-line
           hide-details
-        ></v-text-field>
-      </v-toolbar>
-    </template>
-    <template v-slot:item="{ item }">
-      <tr>
-        <td>{{ item.id }}</td>
-        <td>{{ item.Nombre }}</td>
-        <td>{{ item.Edad }}</td>
-        <td>{{ item.Genero }}</td>
-        <td>{{ item.Estado_Civil }}</td>
-        <td>{{ item.Ocupacion }}</td>
-        <td>{{ item.Domicilio }}</td>
-        <td>{{ item.Telefono }}</td>
-        <td>{{ item.Correo_Electronico }}</td>
-        <td>{{ item.Numero_identificacion }}</td>
-        <td>
-          <v-btn
-            class="mx-2"
-            fab
-            dark
-            small
-            color="primary"
-          >
-            <v-icon dark>mdi-book-open-variant</v-icon>
-          </v-btn>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+        :headers="headers"
+        :items="desserts"
+        :search="search"
+    >
+      <template v-slot:item.Nueva_Columna="{ item }">
+        <v-btn style="background-color: #941c01" @click="deletePaciente(item.id)">Eliminar</v-btn>
+        <v-btn style="background-color: #ffc02f" @click="editPaciente(item.id)">Actualizar</v-btn>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
+
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  data() {
+  data () {
     return {
-      headers: [
-        { text: 'Id', value: 'id' },  
-        { text: 'Nombre', value: 'nombre' },  
-        { text: 'Edad', value: 'edad' },
-        { text: 'Género', value: 'genero' },
-        { text: 'Estado civil', value: 'estadoCivil' },
-        { text: 'Ocupación', value: 'ocupacion' },
-        { text: 'Domicilio', value: 'domicilio' },
-        { text: 'Teléfono', value: 'telefono' },
-        { text: 'Correo electrónico', value: 'correoElectronico' },
-        { text: 'Número de identificación', value: 'numIdentificacion' },
-        { text: 'Consulta', value: 'consulta' },
-      ],
-      pacientes: [],
-      loading: false,
       search: '',
-      pagination: {
-        sortBy: 'nombre', // cambiar 'id' a 'nombre'
-        descending: false,
-      },
-    };
+      headers: [
+        { text: 'Id', value: 'id' },
+        { text: 'Nombre', value: 'Nombre' },
+        { text: 'Edad', value: 'Edad' },
+        { text: 'Género', value: 'Genero' },
+        { text: 'Estado civil', value: 'Estado_Civil' },
+        { text: 'Ocupación', value: 'Ocupacion' },
+        { text: 'Domicilio', value: 'Domicilio' },
+        { text: 'Teléfono', value: 'Telefono' },
+        { text: 'Correo electrónico', value: 'Correo_Electronico' },
+        { text: 'Número de identificación', value: 'Numero_identificacion' },
+        { text: 'Acciones', value: 'Nueva_Columna', sortable: false }
+
+
+      ],
+      desserts: [      ],
+    }
   },
   created() {
     this.fetchData();
-  },
-  computed: {
-    filteredPacientes() {
-      return this.pacientes.filter(paciente => {
-        return Object.keys(paciente).some(key =>
-          String(paciente[key]).toLowerCase().includes(this.search.toLowerCase())
-        );
-      });
-    },
   },
   methods: {
     fetchData() {
       this.loading = true;
       axios
-        .get('http://127.0.0.1:8000/pacientes/')
-        .then(response => {
-          this.pacientes = response.data;
-          console.log(response.data)
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+          .get('http://127.0.0.1:8000/pacientes/')
+          .then(response => {
+            this.desserts = response.data;
+            console.log(response.data)
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+    },
+    async deletePaciente(paciente_id) {
+      try {
+        const response = await axios.delete(`http://127.0.0.1:8000/pacientes/${paciente_id}/`);
+        console.log(response);
+        this.fetchData();
+      } catch (error) {
+        console.error("Ocurrió un error:", error.response.data)
+      }
     },
   },
-};
+}
 </script>
+
+

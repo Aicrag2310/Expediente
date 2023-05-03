@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Expediente from '../views/expediente.vue'
+import Tabulacion from '../views/tab_expediente.vue'
+import Form_New_Pacient from '../components/paciente/form_new_paciente.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +25,18 @@ const routes = [
     name: 'Expediente',
     component: Expediente,
     meta: { requiresAuth: true } // se agrega la propiedad meta a la ruta que requiere autenticación
+  },
+  {
+    path: '/tab',
+    name: 'tab',
+    component: Tabulacion,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/new',
+    name: 'paciente',
+    component: Form_New_Pacient,
+    meta: { requiresAuth: true }
   },
 ]
 

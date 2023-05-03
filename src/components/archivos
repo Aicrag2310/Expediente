@@ -1,0 +1,45 @@
+<template>
+  <v-card>
+    <v-card-title>
+      Nutrition
+      <v-spacer></v-spacer>
+      <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+        :headers="headers"
+        :items="desserts"
+        :search="search"
+    ></v-data-table>
+  </v-card>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      search: '',
+      headers: [
+         { text: 'Id', value: 'id' },
+                { text: 'Nombre', value: 'nombre' },
+                { text: 'Edad', value: 'edad' },
+                { text: 'Género', value: 'genero' },
+                { text: 'Estado civil', value: 'estadoCivil' },
+                { text: 'Ocupación', value: 'ocupacion' },
+                { text: 'Domicilio', value: 'domicilio' },
+                { text: 'Teléfono', value: 'telefono' },
+                { text: 'Correo electrónico', value: 'correoElectronico' },
+                { text: 'Número de identificación', value: 'numIdentificacion' },
+                { text: 'Consulta', value: 'consulta' },
+      ],
+      desserts: [      ],
+    }
+
+  },
+}
+</script>
